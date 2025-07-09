@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>espaco tai botelho - Agendamentos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #e91e63;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    form {
+      background-color: #fce4ec;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 400px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #f8bbd0;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>espaco tai botelho - Agendamentos</h1>
+  </header>
+
+  <main>
+    <h2>Agendar Novo Atendimento</h2>
+    <form id="form-agendamento">
+      <label>Nome do Cliente:</label><br>
+      <input type="text" id="cliente" required><br><br>
+
+      <label>Serviço:</label><br>
+      <input type="text" id="servico" required><br><br>
+
+      <label>Data e Hora:</label><br>
+      <input type="datetime-local" id="datahora" required><br><br>
+
+      <label>Profissional:</label><br>
+      <input type="text" id="profissional" required><br><br>
+
+      <button type="submit">Agendar</button>
+    </form>
+
+    <h2>📋 Agendamentos do Dia</h2>
+    <ul id="lista-agendamentos"></ul>
+  </main>
+
+  <script>
+    const form = document.getElementById('form-agendamento');
+    const lista = document.getElementById('lista-agendamentos');
+
+    // Carrega agendamentos salvos
+    window.addEventListener('load', () => {
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+      agendamentos.forEach(adicionarNaLista);
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const cliente = document.getElementById('cliente').value;
+      const servico = document.getElementById('servico').value;
+      const datahora = document.getElementById('datahora').value;
+      const profissional = document.getElementById('profissional').value;
+
+      const agendamento = { cliente, servico, datahora, profissional };
+      adicionarNaLista(agendamento);
+      salvarAgendamento(agendamento);
+      form.reset();
+    });
+
+    function adicionarNaLista(agendamento) {
+      const item = document.createElement('li');
+      item.textContent = `${agendamento.datahora} - ${agendamento.cliente} | ${agendamento.servico} com ${agendamento.profissional}`;
+      lista.appendChild(item);
+    }
+
+    function salvarAgendamento(agendamento) {
+      const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+      agendamentos.push(agendamento);
+      localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
+    }
+  </script>
+
+</body>
+</html>
+
